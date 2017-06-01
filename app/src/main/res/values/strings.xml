@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Beer o\'clock</string>
+
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_scan">ScanActivity</string>
+
+    <string name="permission_storage_title">Opslagruimte</string>
+    <string name="permission_storage_body">Opslag op SD-kaart .</string>
+    <string name="permission_dialog_title">Permissions</string>
+    <string name="permission_dialog_body">Buzzooka needs your permission</string>
+    <string name="permission_go_to_settings">Go to settings</string>
+
+    <string name="loading_dialog_title">Process data</string>
+
+
+    <string name="authentication_error">Your session has expired. You can renew it by logging out.</string>
+    <string name="network_error">Your not connected to the internet. Try again later.</string>
+    <string name="server_error">The server isn\'t responding. Try again later.</string>
+    <string name="internal_server_error">There\'s something wrong with the server try again later.</string>
+    <string name="login_error">Your credentials aren\'t right.</string>
+</resources>

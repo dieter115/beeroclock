@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "459713287617",
+    "firebase_url": "https://beeroclock-53b0f.firebaseio.com",
+    "project_id": "beeroclock-53b0f",
+    "storage_bucket": "beeroclock-53b0f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:459713287617:android:e34250aa9122c9d0",
+        "android_client_info": {
+          "package_name": "be.flashapps.beeroclock"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "459713287617-5tet6fnfgno7agfso2lt8dlmvr9mp0am.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOgqs62OqiJ8beTn7b9XNFlM9R_TrJZO0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

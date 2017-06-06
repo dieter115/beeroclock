@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import java.io.IOException;
 
+import be.flashapps.beeroclock.Models.ResponseApi;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -34,7 +35,10 @@ public class RestClient {
     public interface ApiManagerService {
 
         @GET("search/upc")
-        Call<be.flashapps.beeroclock.Models.Response> getBeerByUPC(@Query("key") String key, @Query("code") String upc);
+        Call<ResponseApi> getBeerByUPC(@Query("key") String key, @Query("code") String upc);
+
+        @GET("beers")
+        Call<ResponseApi> getBeersByName(@Query("key") String key,@Query("name") String name);
 
 
     }
@@ -75,7 +79,7 @@ public class RestClient {
 
             Interceptor interceptor = new Interceptor() {
                 @Override
-                public Response intercept(Chain chain) throws IOException {
+                public ResponseApi intercept(Chain chain) throws IOException {
                     Request original = chain.request();
 
                     Request.Builder requestBuilder = original.newBuilder()

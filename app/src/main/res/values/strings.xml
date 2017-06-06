@@ -19,4 +19,5 @@
     <string name="server_error">The server isn\'t responding. Try again later.</string>
     <string name="internal_server_error">There\'s something wrong with the server try again later.</string>
     <string name="login_error">Your credentials aren\'t right.</string>
+    <string name="search_hint">Search Beers</string>
 </resources>

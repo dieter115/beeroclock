@@ -6,7 +6,7 @@ import com.google.gson.JsonArray;
  * Created by dietervaesen on 30/05/17.
  */
 
-public class Response {
+public class ResponseApi {
     private int currentPage;
     private int numberOfPages;
     private int totalResults;

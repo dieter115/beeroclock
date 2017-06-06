@@ -1,6 +1,7 @@
 package be.flashapps.beeroclock.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,6 +12,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.canelmas.let.AskPermission;
 import com.canelmas.let.DeniedPermission;
 import com.canelmas.let.Let;
@@ -36,6 +39,7 @@ import java.util.List;
 import be.flashapps.beeroclock.App;
 import be.flashapps.beeroclock.Models.ApiError;
 import be.flashapps.beeroclock.Models.Beer;
+import be.flashapps.beeroclock.Models.ResponseApi;
 import be.flashapps.beeroclock.R;
 import be.flashapps.beeroclock.helpers.ErrorHelper;
 import be.flashapps.beeroclock.manager.ConstantManager;
@@ -74,40 +78,57 @@ public class ScanActivity extends BaseActivity implements RuntimePermissionListe
             barcodePreview.setImageBitmap(result.getBitmapWithResultPoints(Color.YELLOW));
 
 
-            RestClient.getApiService(App.getContext()).getBeerByUPC(ConstantManager.BREWERYDB_API_KEY,lastBarCode). enqueue(new Callback<be.flashapps.beeroclock.Models.Response>() {
-                        @Override
-                        public void onResponse(Call<be.flashapps.beeroclock.Models.Response> call, final Response<be.flashapps.beeroclock.Models.Response> response) {
-                            if (response.code() == 200) {
-                                realm.executeTransaction(new Realm.Transaction() {
-                                    @Override
-                                    public void execute(Realm realm) {
-                                        JsonArray jsonArray=response.body().getData();
-                                        if(jsonArray!=null) {
-                                            Type type = new TypeToken<List<Beer>>() {
-                                            }.getType();
-                                            List<Beer> beers = ConstantManager.getGson().fromJson(jsonArray.toString(), type);
-                                            for (Beer beer : beers) {
-                                                beer.setBarCode(lastBarCode);
-                                                addBeer(beer);
-                                            }
-
-                                        }else{
-                                            Snackbar.make(findViewById(android.R.id.content),"No beers found for this code",Snackbar.LENGTH_LONG).show();
-                                        }
+            RestClient.getApiService(App.getContext()).getBeerByUPC(ConstantManager.BREWERYDB_API_KEY, lastBarCode).enqueue(new Callback<ResponseApi>() {
+                @Override
+                public void onResponse(Call<ResponseApi> call, final Response<ResponseApi> response) {
+                    if (response.code() == 200) {
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                JsonArray jsonArray = response.body().getData();
+                                if (jsonArray != null) {
+                                    Type type = new TypeToken<List<Beer>>() {
+                                    }.getType();
+                                    List<Beer> beers = ConstantManager.getGson().fromJson(jsonArray.toString(), type);
+                                    for (Beer beer : beers) {
+                                        beer.setBarCode(lastBarCode);
+                                        addBeer(beer);
                                     }
-                                    //adden to realm is in onchangelistener
-                                });
-                            } else {
-                                ApiError error = ErrorHelper.parseError(response);
-                                Snackbar.make(findViewById(android.R.id.content), error.getMessage(), Snackbar.LENGTH_LONG).show();
-                            }
-                        }
 
-                        @Override
-                        public void onFailure(Call<be.flashapps.beeroclock.Models.Response> call, Throwable t) {
-                            ErrorHelper.processError(t, ScanActivity.this);
-                        }
-                    });;
+                                } else {
+                                    Snackbar.make(findViewById(android.R.id.content), "No beers found for this code", Snackbar.LENGTH_LONG).show();
+
+                                    new MaterialDialog.Builder(ScanActivity.this)
+                                            .title("No beers found for this code")
+                                            .content("Do you want to add a beer to this code")
+                                            .positiveText("Ok")
+                                            .positiveText("Cancel")
+                                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                                @Override
+                                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                    //automatically finishes
+                                                    Intent intent = new Intent(ScanActivity.this, SearchActivity.class);
+                                                    intent.putExtra(ConstantManager.BARCODE_TO_CONNECT,lastBarCode);
+                                                    startActivity(intent);
+                                                }
+                                            })
+                                            .show();
+                                }
+                            }
+                            //adden to realm is in onchangelistener
+                        });
+                    } else {
+                        ApiError error = ErrorHelper.parseError(response);
+                        Snackbar.make(findViewById(android.R.id.content), error.getMessage(), Snackbar.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseApi> call, Throwable t) {
+                    ErrorHelper.processError(t, ScanActivity.this);
+                }
+            });
+            ;
         }
 
         @Override
@@ -135,7 +156,7 @@ public class ScanActivity extends BaseActivity implements RuntimePermissionListe
         });
 
 
-        realm=getRealm();
+        realm = getRealm();
         setUpBarcode();
 
         setUpFireBase();
@@ -144,7 +165,7 @@ public class ScanActivity extends BaseActivity implements RuntimePermissionListe
     }
 
     private void addBeer(Beer beer) {
-       fireBaseInstance.child("beers").child(beer.getId()).setValue(beer);
+        fireBaseInstance.child("beers").child(beer.getId()).setValue(beer);
         //adden to realm is in onchangelistener
     }
 
@@ -161,7 +182,7 @@ public class ScanActivity extends BaseActivity implements RuntimePermissionListe
                         realm.copyToRealmOrUpdate(beer);
                     }
                 });
-                Snackbar.make(findViewById(android.R.id.content),beer.getName()+" beer added",Snackbar.LENGTH_LONG).show();
+                Snackbar.make(findViewById(android.R.id.content), beer.getName() + " beer added", Snackbar.LENGTH_LONG).show();
                 Logger.d("beer added " + beer.getName());
             }
 

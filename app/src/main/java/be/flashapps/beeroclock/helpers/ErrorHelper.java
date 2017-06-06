@@ -57,7 +57,7 @@ public class ErrorHelper {
         }
     }
 
-    public static ApiError parseError(Response<?> response) {
+    public static ApiError parseError(Response response) {
         ApiError error = new ApiError();
         /*if(error.getMessage()==null){
             if(error.getException()!=null)

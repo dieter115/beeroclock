@@ -26,6 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ConstantManager {
 
     public static String BREWERYDB_API_KEY="a9becf806f9838cf8c12c9a38327537d";
+    public static String BARCODE_TO_CONNECT="BARCODETOCONNECT";
 
     public static Gson getGson() {
         GsonBuilder builder = new GsonBuilder();
